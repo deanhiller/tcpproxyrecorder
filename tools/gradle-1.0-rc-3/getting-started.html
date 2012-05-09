@@ -1,0 +1,444 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Installing Gradle</title><meta content="DocBook XSL Stylesheets V1.75.2" name="generator"><style xmlns:xi="http://www.w3.org/2001/XInclude" type="text/css">
+            
+/*
+ * Basic layout
+ */
+
+html {
+    margin: 0;
+    /*height: 100%;*/
+    /*min-height: 100%*/
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    line-height: 150%;
+}
+
+body, td, div {
+    font-family: 'DejaVu Sans', 'Lucida Grande', 'Verdana', sans-serif;
+    font-size: 11pt;
+    color: #444444;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: #444444;
+}
+
+a:visited {
+    color: #444444;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #444444;
+    line-height: 150%;
+    font-weight: bold;
+    font-family: 'DejaVu Sans', 'Lucida Grande', helvetica, sans-serif;
+}
+
+.heading {
+    font-family: 'DejaVu Sans', 'Lucida Grande', helvetica, sans-serif;
+}
+
+code, pre {
+    font-family: 'Lucida Console', 'DejaVu Sans Mono', Courier, monospace;
+}
+
+/*
+ * Docbook content
+ */
+
+/*
+ * Links
+ */
+a.link {
+    white-space: nowrap;
+}
+
+/*
+ * Lists
+ */
+
+.variablelist dt {
+    font-weight: bold;
+}
+
+.variablelist dt a {
+    font-weight: normal;
+}
+
+/*
+ * Examples, Figures
+ */
+
+pre {
+    background-color: #f5f5f5;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+    line-height: 120%;
+}
+
+.programlisting {
+    border-left: solid #d0d0d0 0.5em;
+    /*overflow-x: auto;*/
+}
+
+.screen {
+    border-left: solid #d0d0d0 0.5em;
+    /*overflow-x: auto;*/
+}
+
+.example, .figure, .table {
+    margin-top: 0;
+    margin-bottom: 1.8em;
+}
+
+.example .title, .figure .title, .table .title {
+    white-space: nowrap;
+    /*overflow-x: hidden;*/
+    margin-top: 0;
+    margin-bottom: 0.6em;
+}
+
+.example pre, .figure pre {
+    margin: 0;
+    margin-bottom: 0.6em;
+}
+
+.example-contents > p {
+    display: block;
+    margin: 0;
+    margin-bottom: 0.2em;
+}
+
+.example-break, .figure-break {
+    display: none
+}
+
+.exampleLocation {
+    margin-top: 0.5em;
+    padding-left: 1.7em;
+    background: #FEFEDD;
+    color: #777744;
+}
+
+.exampleLocation p {
+    padding-top: 0.4em;
+    padding-bottom: 0.4em;
+}
+
+.exampleLocation .emphasis em {
+    font-style: normal;
+    font-weight: bold;
+}
+
+.cmdsynopsis {
+    font-family: Courier, monospace;
+    margin-left: 2em;
+}
+
+/*
+ * Tables
+ */
+
+.table table {
+    border-collapse: collapse;
+    font-size: 100%;
+    min-width: 50%;
+    border: solid #d0d0d0 1px;
+}
+
+.table table td {
+    text-align: left;
+    vertical-align: text-top;
+    padding-left: 0.8em;
+    padding-right: 0.8em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+}
+
+.table table thead td {
+    font-weight: bold;
+    border-bottom: solid #d0d0d0 1px;
+    background-color: #f2f2f2;
+}
+
+/*
+ * Footnotes, notes, tips
+ */
+
+.footnote sup {
+    vertical-align: baseline;
+    font-size: 100%;
+}
+
+.note, .tip {
+    padding-top: 1em;
+    padding-bottom: 0;
+    padding-left: 1.2em;
+    padding-right: 1.2em;
+    margin-bottom: 1em;
+}
+
+.note {
+    background: #ebf4f7;
+    border: solid #c3d9e6 1px;
+}
+
+.note .title {
+    color: #5283a1;
+}
+
+.tip {
+    background: #FAF7F5;
+    border: solid #e2d2c9 1px;
+    float: right;
+    clear: right;
+    margin-left: 2em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    max-width: 30%;
+    width: 30%;
+}
+
+.tip .title {
+    color: #80614D;
+}
+
+/* Remove top margins on headings inside notes and tips */
+.tip h1, .note h1
+.tip h2, .note h2,
+.tip h3, .note h3,
+.tip h4, .note h4,
+.tip h5, .note h5,
+.tip h6, .note h6
+{
+   margin-top: 0;
+}
+
+/**
+ * Inline content
+ */
+.literal, .userinput, .filename {
+    white-space: nowrap;
+}
+
+/*
+ * Code highlighting
+ */
+.hl-string, .hl-number, .hl-value { color: #51913f; }
+
+.hl-keyword { font-weight: bold; }
+
+.hl-comment, .hl-doccomment { color: #929292; }
+
+.hl-annotation { color: #777744; }
+
+            
+body {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    margin-left: 4em;
+    margin-right: 4em;
+}
+
+a {
+    text-decoration: none;
+    border-bottom: dotted 1px;
+    /*outline: none;*/
+}
+
+p {
+   /* ensure paragraphs remain close to their parent heading */
+   margin-top: 0;
+   margin-bottom: 1em;
+}
+
+h1, h2, h3, h4, h5 {
+    /* ensure paragraphs remain close to their parent heading */
+    margin-bottom: 0.2em;
+    color: #4a9935;
+}
+
+h1 {
+    font-size: 180%;
+}
+
+h2 {
+    font-size: 180%;
+}
+
+h3 {
+    font-size: 110%;
+}
+
+.chapter h1 {
+    margin-bottom: 1.0em;
+}
+
+.appendix h1 {
+    margin-bottom: 1.0em;
+}
+
+.section h2 {
+    font-size: 130%;
+    margin-top: 1.4em;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a {
+    color: inherit;
+}
+
+h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited {
+    color: inherit;
+}
+
+            /*
+ * Table of Contents
+ */
+
+.toc dl, .list-of-examples dl {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.book .toc > dl > dt {
+    margin-top: 0.6em;
+}
+
+.book .toc, .book .list-of-examples {
+    margin-top: 2em;
+}
+
+/*
+ * HEADER/FOOTER
+ */
+
+.navheader {
+    margin-bottom: 3em;
+    padding-bottom: 1em;
+    width: 100%;
+    border-bottom: solid #d0d0d0 0.4em;
+}
+
+.navfooter {
+    margin-top: 3em;
+    padding-top: 1em;
+    width: 100%;
+    border-top: solid #d0d0d0 0.4em;
+}
+
+.navbar {
+    color: #a2a2a2;
+    font-size: 90%;
+    width: 100%;
+    text-align: right;
+}
+
+.navbar a {
+    color: #444444;
+}
+
+.navbar span {
+    padding-left: .8em;
+    padding-right: .8em;
+}
+
+/**
+ * TITLEPAGE
+ */
+
+.book > .titlepage {
+    margin-top: 2.2em;
+    margin-bottom: 2em;
+}
+
+.book .titlepage div.title {
+    border: solid #d0d0d0 1px;
+    background-color: #f5f5f5;
+    margin-left: -1.8em;
+    margin-right: -1.8em;
+    padding-left: 1.8em;
+    padding-right: 1.8em;
+    margin-bottom: 2.2em;
+}
+
+.titlepage h1.title {
+    font-size: 280%;
+    margin-bottom: 0;
+    color: #4a9935;
+}
+
+.titlepage h2.subtitle {
+    font-size: 160%;
+    font-style: italic;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #4a9935;
+}
+
+.titlepage .releaseinfo {
+    color: #666666;
+    font-size: 120%;
+    margin-top: 2em;
+    margin-bottom: 2.6em;
+}
+
+.titlepage .author {
+    color: #666666;
+}
+
+.titlepage .copyright {
+    color: #a2a2a2;
+    font-size: 90%;
+}
+
+.titlepage .legalnotice {
+    color: #a2a2a2;
+    font-size: 90%;
+}
+
+/*
+ * Single page html
+ */
+.book .chapter {
+    margin-top: 4em;
+}
+
+        </style></head><body><div class="chapter"><div class="titlepage"><div><div><h1 xmlns:xslthl="http://xslthl.sf.net"><a name="installation"></a>Installing Gradle</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10007"></a>Prerequisites</h2></div></div></div><p>Gradle requires a Java JDK to be installed. Gradle requires a JDK 1.5 or higher. Gradle ships with its own
+        Groovy library, therefore no Groovy needs to be installed. Any existing Groovy installation is ignored by Gradle.
+    </p><p>Gradle uses whichever JDK it finds in your path (to check, use <strong class="userinput"><code>java -version</code></strong>).
+        Alternatively, you can set the <code class="envar">JAVA_HOME</code> environment variable to point to the install directory
+        of the desired JDK.
+    </p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10014"></a>Download</h2></div></div></div><p>You can download one of the Gradle distributions from the <a class="ulink" href="http://www.gradle.org/downloads" target="_top">Gradle web site</a>.</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1001D"></a>Unpacking</h2></div></div></div><p>The Gradle distribution comes packaged as a ZIP. The full distribution contains:</p><div class="itemizedlist"><ul class="itemizedlist"><li class="listitem"><p>The Gradle binaries.</p></li><li class="listitem"><p>The user guide (HTML and PDF).</p></li><li class="listitem"><p>The DSL reference guide.</p></li><li class="listitem"><p>The API documentation (Javadoc and Groovydoc).</p></li><li class="listitem"><p>Extensive samples, including the examples referenced in the user guide, along with some complete and more
+            complex builds you can use the starting point for your own build.
+        </p></li><li class="listitem"><p>The binary sources. This is for reference only. If you want to build Gradle you need to download the source distribution
+            or checkout the sources from the source repository. See the <a class="ulink" href="http://www.gradle.org/development" target="_top">Gradle web site</a> for details.
+        </p></li></ul></div><div class="note"><h3 class="title">For Un*x users</h3><p>You need a GNU compatible tool to unzip Gradle, if you want the file permissions to be properly set. We mention this as
+some zip front ends for Mac OS X don't restore the file permissions properly.
+</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1003E"></a>Environment variables</h2></div></div></div><p>For running Gradle, add <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/bin</code> to your <code class="envar">PATH</code>
+    environment variable. Usually, this is sufficient to run Gradle.
+</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N1004B"></a>Running and testing your installation</h2></div></div></div><p>You run Gradle via the <span class="command"><strong>gradle</strong></span> command. To check if Gradle is properly installed just type
+<span class="command"><strong>gradle -v</strong></span>. The output shows Gradle version and also local environment configuration (groovy and jvm version, etc.).
+    The displayed gradle version should match the distribution you have downloaded.
+</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10056"></a>JVM options</h2></div></div></div><p>JVM options for running Gradle can be set via environment variables. You can use <code class="envar">GRADLE_OPTS</code>
+or <code class="envar">JAVA_OPTS</code>. Those variables can be used together. <code class="envar">JAVA_OPTS</code> is by convention an environment
+variable shared by many Java applications. A typical use case would be to set the HTTP proxy in <code class="envar">JAVA_OPTS</code>
+and the memory options in <code class="envar">GRADLE_OPTS</code>. Those variables can also be set at the beginning
+of the <span class="command"><strong>gradle</strong></span> or <span class="command"><strong>gradlew</strong></span> script.
+</p></div><div class="section"><div class="titlepage"><div><div><h2 class="title"><a name="N10070"></a>Getting help</h2></div></div></div><p>You might check the user guide at <code class="filename"><em class="replaceable"><code>GRADLE_HOME</code></em>/docs/userguide/userguide.html</code>.
+It is also available on the <a class="ulink" href="http://www.gradle.org/documentation.html" target="_top">Gradle web site</a>.
+Typing <span class="command"><strong>gradle help</strong></span> prints the command line help. Typing <span class="command"><strong>gradle tasks</strong></span> shows all the
+tasks of a Gradle build.
+</p></div></div></body></html>

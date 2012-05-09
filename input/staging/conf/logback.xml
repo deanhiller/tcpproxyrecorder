@@ -1,0 +1,28 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- Support multiple-JVM writing to the same log file -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/stserver.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory> 
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread]  %X{ctx} %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender> 
+  
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+    	<pattern>%d{HH:mm:ss.SSS} %-5level [%thread]  %X{ctx} %logger{36} - %msg%n</pattern>
+  	</encoder>    
+  </appender>
+
+  <logger name="org.apache" level="INFO"></logger>
+  
+  <root level="INFO">
+    <!-- appender-ref ref="STDOUT" /-->
+    <appender-ref ref="FILE" />
+  </root>
+  
+</configuration>

@@ -1,0 +1,15 @@
+
+#************************************
+# Generated file. Do not modify
+#
+# TODO: check for JAVA_HOME. if not set show error as this is
+# the one and only thing that has to be set!!!!
+#************************************
+
+
+export GRADLE_HOME=$PWD/tools/gradle-1.0-rc-3
+
+
+chmod 755 $GRADLE_HOME/bin/gradle
+
+$GRADLE_HOME/bin/gradle $@

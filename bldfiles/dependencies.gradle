@@ -1,0 +1,10 @@
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    compile group: 'org.hibernate', name:'hibernate-entitymanager', version: '4.1.2.Final'
+}
+

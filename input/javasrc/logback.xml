@@ -1,0 +1,15 @@
+<configuration scan="true" scanPeriod="30 seconds">
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+	<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+    	<pattern>%d{HH:mm:ss.SSS} %-5level [%thread]  %X{ctx} %logger{36} - %msg%n</pattern>
+  	</encoder>    
+  </appender>
+
+
+  <logger name="org.apache" level="INFO"></logger>
+  
+  <root level="debug">
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

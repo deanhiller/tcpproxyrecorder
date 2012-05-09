@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<project name="autobuild" default="autobuild" basedir="..">
+
+	<target name="autobuild">
+
+	</target>
+	
+	<target name="autobuild2" >
+		<copy todir="../javamedia/input/libexclude">
+			<fileset dir="${jardist}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<ant dir="../javamedia" antfile="bldfiles/checkin.xml" target="checkin" />	
+		
+		<copy todir="../javasip/input/libexclude">
+			<fileset dir="${jardist}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+		<ant dir="../javasip" antfile="bldfiles/checkin.xml" target="checkin" />			
+		<copy todir="../platform/svcrouter/input/libexclude">
+			<fileset dir="${jardist}">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${libexclude}">
+				<include name="**/platform-api.jar" />
+			</fileset>
+		</copy>
+		<ant dir="../platform/svcrouter" antfile="bldfiles/checkin.xml" target="checkinChanMgr" />
+		<copy todir="../coresvc/usersvc/input/libexclude">
+			<fileset dir="${jardist}">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${libexclude}">
+				<include name="**/platform-api.jar" />
+			</fileset>
+		</copy>
+		<ant dir="../coresvc/usersvc" antfile="bldfiles/checkin.xml" target="checkinApi" />
+
+		<copy todir="../coresvc/projectsvc/input/libexclude">
+			<fileset dir="${jardist}">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${libexclude}">
+				<include name="**/platform-api.jar" />
+			</fileset>
+		</copy>
+		<ant dir="../coresvc/projectsvc" antfile="bldfiles/checkin.xml" target="checkin" />
+		
+	</target>
+
+</project>
