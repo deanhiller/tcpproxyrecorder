@@ -41,7 +41,7 @@ public class ServerSockListener implements ConnectionListener {
 			isRecordAndPlayback = false;
 		
 		Command cmd= new Command(channel, Action.CONNECT, address, 0, isRecordAndPlayback);
-		writer.writeCommand(cmd);
+		writer.writeCommand(channel, cmd);
 		
 		TCPChannel proxyChannel = chanMgr.createTCPChannel("proxyfor="+channel, null );
 		proxyChannel.connect(info.getAddressToForwardTo());

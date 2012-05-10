@@ -52,7 +52,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	@Override
 	public void farEndClosed(Channel channel) {
 		Command cmd = new Command(incomingChannel, Action.DISCONNECT, null, 0, isRecordForPlayback);
-		writer.writeCommand(cmd);
+		writer.writeCommand(incomingChannel, cmd);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	public void demarcatePacketHere() {
 		//reset byte counter here
 		Command cmd = new Command(incomingChannel, Action.WRITE, null, bytesWritten, isRecordForPlayback);
-		writer.writeCommand(cmd);
+		writer.writeCommand(incomingChannel, cmd);
 		bytesWritten = 0;
 	}
 	
