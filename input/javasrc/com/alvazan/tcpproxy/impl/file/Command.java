@@ -11,8 +11,9 @@ public class Command {
 	private InetSocketAddress address;
 	private long payloadSize;
 	private boolean needsPlayback;
+	private ChannelType type;
 	
-	public Command(Channel channel, Action action, InetSocketAddress address,
+	public Command(Channel channel, ChannelType type, Action action, InetSocketAddress address,
 			long payloadSize, boolean needsPlayback) {
 		super();
 		this.channel = channel;
@@ -20,8 +21,15 @@ public class Command {
 		this.address = address;
 		this.payloadSize = payloadSize;
 		this.needsPlayback = needsPlayback;
+		this.type = type;
 	}
 
+	public ChannelType getType() {
+		return type;
+	}
+	public void setType(ChannelType type) {
+		this.type = type;
+	}
 	public Channel getChannel() {
 		return channel;
 	}

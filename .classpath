@@ -27,6 +27,6 @@
 	<classpathentry kind="lib" path="input/libinclude/commons-beanutils-bean-collections-1.8.3.jar"/>
 	<classpathentry kind="lib" path="input/libinclude/commons-beanutils-core-1.8.3.jar"/>
 	<classpathentry kind="lib" path="input/libinclude/commons-io-2.3.jar"/>
-	<classpathentry kind="lib" path="input/libinclude/channelmgr.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/channelmanager"/>
 	<classpathentry kind="output" path="eclipsegen"/>
 </classpath>

@@ -11,7 +11,7 @@ public class ProductionBindings implements Module {
 
 	@Override
 	public void configure(Binder binder) {
-		ChannelService chanMgr = ChannelServiceFactory.createRawChannelManager("only");
+		ChannelService chanMgr = ChannelServiceFactory.createRawChannelManager("");
 		binder.bind(ChannelService.class).toInstance(chanMgr);
 		binder.bind(ChannelManager.class).toInstance(chanMgr);
 	}

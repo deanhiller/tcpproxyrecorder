@@ -18,6 +18,7 @@ import com.alvazan.tcpproxy.api.recorder.Direction;
 import com.alvazan.tcpproxy.api.recorder.PacketDemarcator;
 import com.alvazan.tcpproxy.api.recorder.ProxyInfo;
 import com.alvazan.tcpproxy.impl.file.Action;
+import com.alvazan.tcpproxy.impl.file.ChannelType;
 import com.alvazan.tcpproxy.impl.file.Command;
 import com.alvazan.tcpproxy.impl.file.FileWriter;
 
@@ -40,7 +41,7 @@ public class ServerSockListener implements ConnectionListener {
 		if(info.getDirection() == Direction.FROM_SERVERSOCKET)
 			isRecordAndPlayback = false;
 		
-		Command cmd= new Command(channel, Action.CONNECT, address, 0, isRecordAndPlayback);
+		Command cmd= new Command(channel, ChannelType.TCP, Action.CONNECT, address, 0, isRecordAndPlayback);
 		writer.writeCommand(channel, cmd);
 		
 		TCPChannel proxyChannel = chanMgr.createTCPChannel("proxyfor="+channel, null );

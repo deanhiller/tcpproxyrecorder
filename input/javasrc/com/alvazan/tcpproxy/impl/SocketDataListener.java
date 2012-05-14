@@ -16,6 +16,7 @@ import com.alvazan.tcpproxy.api.recorder.PacketDemarcator;
 import com.alvazan.tcpproxy.api.recorder.PacketReadListener;
 import com.alvazan.tcpproxy.api.recorder.ProxyInfo;
 import com.alvazan.tcpproxy.impl.file.Action;
+import com.alvazan.tcpproxy.impl.file.ChannelType;
 import com.alvazan.tcpproxy.impl.file.Command;
 import com.alvazan.tcpproxy.impl.file.FileWriter;
 
@@ -34,8 +35,8 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	
 	@Override
 	public void incomingData(Channel channel, ByteBuffer b) throws IOException {
-		ByteBuffer newBuf = ByteBuffer.allocate(b.remaining());
-		newBuf.put(b);
+		byte[] data = new byte[b.remaining()];
+		b.get(data);
 		b.rewind();
 
 		//We can't support two sockets streaming data at the same time.  Each socket must pass all the pieces of the
@@ -43,7 +44,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 		//throw an exception if multiple streams try to write without demarcation
 		synchronized(SocketDataListener.class) {
 			//just keep feeding data and expect them to feed us the data calling passMoreData
-			demarcator.feedMoreData(newBuf);
+			demarcator.feedMoreData(data);
 		}
 		
 		otherChannel.write(b);
@@ -51,7 +52,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 
 	@Override
 	public void farEndClosed(Channel channel) {
-		Command cmd = new Command(incomingChannel, Action.DISCONNECT, null, 0, isRecordForPlayback);
+		Command cmd = new Command(incomingChannel, ChannelType.TCP, Action.DISCONNECT, null, 0, isRecordForPlayback);
 		writer.writeCommand(incomingChannel, cmd);
 	}
 
@@ -64,7 +65,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	@Override
 	public void demarcatePacketHere() {
 		//reset byte counter here
-		Command cmd = new Command(incomingChannel, Action.WRITE, null, bytesWritten, isRecordForPlayback);
+		Command cmd = new Command(incomingChannel, ChannelType.TCP, Action.WRITE, null, bytesWritten, isRecordForPlayback);
 		writer.writeCommand(incomingChannel, cmd);
 		bytesWritten = 0;
 	}
@@ -79,6 +80,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 		this.otherChannel = outChannel;
 		this.incomingChannel = incomingChannel;
 		this.isRecordForPlayback = isRecordAndPlayback;
+		this.demarcator = demarcator;
 		demarcator.addListener(this);
 	}
 

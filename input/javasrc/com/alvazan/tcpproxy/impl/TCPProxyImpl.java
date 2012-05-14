@@ -24,10 +24,9 @@ public class TCPProxyImpl implements TCPProxy {
 	@Inject
 	private ChannelService chanMgr;
 	@Inject
-	private FileWriter fileWriter;
-	
-	private List<Proxy> proxies = new ArrayList<Proxy>();
 	private FileWriter writer;
+	private List<Proxy> proxies = new ArrayList<Proxy>();
+	private boolean isRunning = false;
 	
 	@Override
 	public void createProxy(int portToAcceptIncoming, ProxyInfo info) {
@@ -41,13 +40,14 @@ public class TCPProxyImpl implements TCPProxy {
 		Proxy proxy = factory.get();
 		proxy.setIncomingPort(portToAcceptIncoming);
 		proxy.setInfo(info);
+		proxies.add(proxy);
 	}
 
 	@Override
 	public void startAll(FileWrapper cmdFile, FileWrapper stream) {
-		if(writer != null)
+		if(isRunning)
 			throw new IllegalStateException("You must stop this one since it is still running");
-		fileWriter.setFiles(cmdFile, stream);
+		writer.setFiles(cmdFile, stream);
 		writer.open();
 		
 		try {
@@ -58,6 +58,7 @@ public class TCPProxyImpl implements TCPProxy {
 		for(Proxy proxy : proxies) {
 			proxy.start();
 		}
+		isRunning = true;
 	}
 
 	public void stopAll() {
@@ -71,6 +72,7 @@ public class TCPProxyImpl implements TCPProxy {
 		for(Proxy proxy : proxies) {
 			proxy.stop();
 		}
+		isRunning = false;
 	}
 	
 	@Override

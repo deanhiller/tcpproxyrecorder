@@ -1,14 +1,17 @@
 package com.alvazan.tcpproxy.impl.file;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Singleton;
+
 import biz.xsoftware.api.nio.channels.Channel;
 
 import com.alvazan.tcpproxy.api.recorder.FileWrapper;
-
+@Singleton
 public class FileWriter {
 
 	private FileWrapper cmdFile;
@@ -32,9 +35,15 @@ public class FileWriter {
 	}
 
 	public void writeCommand(Channel incomingChannel, Command cmd) {
-		String addr = cmd.getAddress().getHostString();
-		int port = cmd.getAddress().getPort();
-		String command = "["+cmd.getAction()+","+cmd.getAddress()+","+addr+":"+port+","+cmd.getPayloadSize()+","+cmd.isNeedsPlayback()+"]\n";
+		String address = "null";
+		if(cmd.getAddress() != null) {
+			String addr = cmd.getAddress().getHostString();
+			int port = cmd.getAddress().getPort();
+			address = addr+":"+port;
+		}
+		String channelId = cmd.getChannel()+"";
+		String type = cmd.getType().getValue();
+		String command = channelId+","+cmd.getAction()+","+type+","+address+","+cmd.getPayloadSize()+","+cmd.isNeedsPlayback()+"\n";
 		cmdFile.write(command.getBytes());
 
 		List<byte[]> list = channelToStream.get(incomingChannel);

@@ -37,8 +37,8 @@ public class Proxy {
 			ServerSockListener listener = factory.get();
 			listener.setInfo(info);
 			listener.setIncomingPort(incomingPort);
-			channel.registerServerSocketChannel(listener);
 			channel.bind(addr);
+			channel.registerServerSocketChannel(listener);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);

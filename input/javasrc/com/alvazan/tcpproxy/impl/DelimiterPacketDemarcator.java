@@ -1,7 +1,5 @@
 package com.alvazan.tcpproxy.impl;
 
-import java.nio.ByteBuffer;
-
 import com.alvazan.tcpproxy.api.recorder.PacketDemarcator;
 import com.alvazan.tcpproxy.api.recorder.PacketReadListener;
 
@@ -21,18 +19,16 @@ public class DelimiterPacketDemarcator implements PacketDemarcator {
 	}
 
 	@Override
-	public void feedMoreData(ByteBuffer buffer) {
-		byte[] bytes = new byte[buffer.remaining()];
-		buffer.get(bytes);
-		buffer.rewind();
-		
+	public void feedMoreData(byte[] bytes) {
 		String s = new String(bytes);
+		int strLength = s.length();
+		int expectedIndex = strLength - delimiterSize;
 		int index = s.indexOf(delimiter);
 		if(index < 0) {
 			listener.passMoreData(bytes);
 			return;
-		} else if(index != s.length()-1-delimiterSize)
-			throw new RuntimeException("The delimeter is not the last character in the payload so we need to split the payload and feed it to the listener twice");
+		} else if(index != expectedIndex)
+			throw new RuntimeException("The delimeter is not the last character in the payload so we need to split the payload and feed it to the listener twice.  payload='"+s+"'");
 		
 		listener.passMoreData(bytes);
 		listener.demarcatePacketHere();		
