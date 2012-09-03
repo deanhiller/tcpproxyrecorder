@@ -4,9 +4,17 @@ import java.net.InetSocketAddress;
 
 
 public class ProxyInfo {
+	private InetSocketAddress incomingAddress;
 	private InetSocketAddress addressToForwardTo;
 	private DemarcatorFactory demarcatorFactory;
-	private Direction direction;
+	private RecordingDirection direction;
+	
+	public InetSocketAddress getIncomingAddress() {
+		return incomingAddress;
+	}
+	public void setIncomingAddress(InetSocketAddress incomingAddress) {
+		this.incomingAddress = incomingAddress;
+	}
 	public InetSocketAddress getAddressToForwardTo() {
 		return addressToForwardTo;
 	}
@@ -20,10 +28,10 @@ public class ProxyInfo {
 	public void setDemarcatorFactory(DemarcatorFactory toServerDemarcator) {
 		this.demarcatorFactory = toServerDemarcator;
 	}
-	public Direction getDirection() {
+	public RecordingDirection getDirection() {
 		return direction;
 	}
-	public void setDirection(Direction direction) {
+	public void setDirection(RecordingDirection direction) {
 		this.direction = direction;
 	}
 	

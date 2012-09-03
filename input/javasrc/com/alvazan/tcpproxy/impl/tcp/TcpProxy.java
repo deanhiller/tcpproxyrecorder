@@ -1,4 +1,4 @@
-package com.alvazan.tcpproxy.impl;
+package com.alvazan.tcpproxy.impl.tcp;
 
 import java.net.InetSocketAddress;
 
@@ -10,39 +10,40 @@ import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 
 import com.alvazan.tcpproxy.api.recorder.ProxyInfo;
+import com.alvazan.tcpproxy.api.recorder.RecordingDirection;
 
-public class Proxy {
+public class TcpProxy {
 
 	@Inject
 	private ChannelManager chanMgr;
 	@Inject
 	private Provider<ServerSockListener> factory;
-	private int incomingPort;
 	private TCPServerChannel channel;
 	private ProxyInfo info;
-
-	public int getIncomingPort() {
-		return incomingPort;
-	}
-
-	public void setIncomingPort(int incomingPort) {
-		this.incomingPort = incomingPort;
-	}
 
 	public void start() {
 		Settings settings = new Settings(null, null);
 		try {
-			channel = chanMgr.createTCPServerChannel("port"+incomingPort, settings );
-			InetSocketAddress addr = new InetSocketAddress(incomingPort);
+			InetSocketAddress addr = info.getAddressToForwardTo();
+			if(info.getDirection() == RecordingDirection.FROM_SERVERSOCKET)
+				addr = info.getIncomingAddress();
+			
+			String name = parse(addr);
+			
+			channel = chanMgr.createTCPServerChannel(name, settings );
 			ServerSockListener listener = factory.get();
 			listener.setInfo(info);
-			listener.setIncomingPort(incomingPort);
-			channel.bind(addr);
+			channel.bind(info.getIncomingAddress());
 			channel.registerServerSocketChannel(listener);
 			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private String parse(InetSocketAddress addr) {
+		String name = addr.getHostName();
+		return name+":"+addr.getPort();
 	}
 
 	public void stop() {
@@ -56,7 +57,6 @@ public class Proxy {
 	public ProxyInfo getInfo() {
 		return info;
 	}
-	
 
 
 }

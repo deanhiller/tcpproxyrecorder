@@ -6,9 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.alvazan.tcpproxy.api.recorder.FileNotFound;
-import com.alvazan.tcpproxy.api.recorder.FileWrapper;
+import com.alvazan.tcpproxy.api.recorder.FileOutWrapper;
 
-public class FileWrapperImpl implements FileWrapper {
+public class FileWrapperImpl implements FileOutWrapper {
 
 	private File file;
 	private FileOutputStream out;

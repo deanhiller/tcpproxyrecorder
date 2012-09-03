@@ -1,4 +1,4 @@
-package com.alvazan.tcpproxy.impl;
+package com.alvazan.tcpproxy.impl.tcp;
 
 import com.alvazan.tcpproxy.api.recorder.PacketDemarcator;
 import com.alvazan.tcpproxy.api.recorder.PacketReadListener;

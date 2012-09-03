@@ -16,49 +16,48 @@ import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 
+import com.alvazan.tcpproxy.api.ProxyFactory;
 import com.alvazan.tcpproxy.api.recorder.DemarcatorFactory;
-import com.alvazan.tcpproxy.api.recorder.Direction;
-import com.alvazan.tcpproxy.api.recorder.FileWrapper;
+import com.alvazan.tcpproxy.api.recorder.FileOutWrapper;
+import com.alvazan.tcpproxy.api.recorder.ProxyCreator;
 import com.alvazan.tcpproxy.api.recorder.ProxyInfo;
-import com.alvazan.tcpproxy.api.recorder.TCPProxy;
-import com.alvazan.tcpproxy.api.recorder.TCPProxyFactory;
+import com.alvazan.tcpproxy.api.recorder.RecordingDirection;
 
-public class TestBasic {
+public class TestBasicRecord {
 
-	private MockWrapper stream;
-	private MockWrapper cmds;
+	private MockOutWrapper stream;
+	private MockOutWrapper cmds;
 
 	@Test
 	public void testBasic() throws IOException, InterruptedException {
-		TCPProxy proxy = TCPProxyFactory.getInstance();
+		ProxyCreator proxy = ProxyFactory.getRecordingInstance(true);
 		
 		DemarcatorFactory factory1 = proxy.createSimpleDelimeterOne(SemiRealServer.DELIMITER1);
 		DemarcatorFactory factory2 = proxy.createSimpleDelimeterOne(SemiRealServer.DELIMITER2);
-		InetAddress local = InetAddress.getLocalHost();
-		InetSocketAddress s = new InetSocketAddress(local, 4445);
-		InetSocketAddress s2 = new InetSocketAddress(local, 4446);
-		int proxyPort = 7775;
-		int proxyPort2 = 7776;
-		ProxyInfo prox1 = createInfo(factory1, s, Direction.TO_SERVERSOCKET);
-		ProxyInfo prox2 = createInfo(factory2, s2, Direction.FROM_SERVERSOCKET);
-		proxy.createProxy(proxyPort, prox1);
-		proxy.createProxy(proxyPort2, prox2);
-
-		FileWrapper cmds1 = createCommandsWrapper(proxy);
-		FileWrapper stream1 = createStreamWrapper(proxy);
+		InetAddress local = InetAddress.getByName("localhost");
+		InetSocketAddress proxySemiRealListen = new InetSocketAddress(7775);
+		InetSocketAddress semiRealListen = new InetSocketAddress(local, 4445);
+		InetSocketAddress proxyServerSendToAddr = new InetSocketAddress(local, 7776);
+		InetSocketAddress bottomestMockServerAddr = new InetSocketAddress(local, 4446);
+		ProxyInfo prox1 = createInfo(proxySemiRealListen, factory1, semiRealListen, RecordingDirection.TO_SERVERSOCKET);
+		ProxyInfo prox2 = createInfo(proxyServerSendToAddr, factory2, bottomestMockServerAddr, RecordingDirection.FROM_SERVERSOCKET);
+		proxy.createTcpProxy(prox1);
+		proxy.createTcpProxy(prox2);
+		
+		FileOutWrapper cmds1 = createCommandsWrapper(proxy);
+		FileOutWrapper stream1 = createStreamWrapper(proxy);
 		proxy.startAll(cmds1, stream1);
 		
-		InetSocketAddress remoteProxyAddr = new InetSocketAddress(local, proxyPort2);
-		ChannelService chanMgr = ChannelServiceFactory.createRawChannelManager("only");
+		ChannelService chanMgr = ChannelServiceFactory.createRawChannelManager("semiReal");
 		chanMgr.start();
-		
-		SemiRealServer server1 = new SemiRealServer(s, remoteProxyAddr, chanMgr);
+
+		SemiRealServer server1 = new SemiRealServer(semiRealListen, proxyServerSendToAddr, chanMgr);
 		server1.start();
 
 		TCPChannel client = chanMgr.createTCPChannel("client", null);
 		TCPServerChannel server = chanMgr.createTCPServerChannel("server", null);
 		MockConnectListener mockListener = new MockConnectListener();
-		server.bind(s2);
+		server.bind(bottomestMockServerAddr);
 		server.registerServerSocketChannel(mockListener);
 
 		//now we can throw some data at the system
@@ -102,13 +101,13 @@ public class TestBasic {
 		stream.assertSize(0);
 	}
 
-	protected FileWrapper createStreamWrapper(TCPProxy proxy) {
-		stream = new MockWrapper();
+	protected FileOutWrapper createStreamWrapper(ProxyCreator proxy) {
+		stream = new MockOutWrapper();
 		return stream;
 	}
 
-	protected FileWrapper createCommandsWrapper(TCPProxy proxy) {
-		cmds = new MockWrapper();
+	protected FileOutWrapper createCommandsWrapper(ProxyCreator proxy) {
+		cmds = new MockOutWrapper();
 		return cmds;
 	}
 
@@ -144,9 +143,10 @@ public class TestBasic {
 		}
 	}
 	
-	private ProxyInfo createInfo(DemarcatorFactory factory, InetSocketAddress s, Direction dir) {
+	private ProxyInfo createInfo(InetSocketAddress incomingAddr, DemarcatorFactory factory, InetSocketAddress toAddr, RecordingDirection dir) {
 		ProxyInfo prox1 = new ProxyInfo();
-		prox1.setAddressToForwardTo(s);
+		prox1.setIncomingAddress(incomingAddr);
+		prox1.setAddressToForwardTo(toAddr);
 		prox1.setDemarcatorFactory(factory);
 		prox1.setDirection(dir);
 		return prox1;

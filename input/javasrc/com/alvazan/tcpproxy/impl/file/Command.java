@@ -2,21 +2,21 @@ package com.alvazan.tcpproxy.impl.file;
 
 import java.net.InetSocketAddress;
 
-import biz.xsoftware.api.nio.channels.Channel;
-
 public class Command {
 
-	private Channel channel;
+	private String channelId;
 	private Action action;
 	private InetSocketAddress address;
-	private long payloadSize;
+	private int payloadSize;
 	private boolean needsPlayback;
 	private ChannelType type;
 	
-	public Command(Channel channel, ChannelType type, Action action, InetSocketAddress address,
-			long payloadSize, boolean needsPlayback) {
+	public Command() {}
+	
+	public Command(String channelId, ChannelType type, Action action, InetSocketAddress address,
+			int payloadSize, boolean needsPlayback) {
 		super();
-		this.channel = channel;
+		this.channelId = channelId;
 		this.action = action;
 		this.address = address;
 		this.payloadSize = payloadSize;
@@ -30,11 +30,11 @@ public class Command {
 	public void setType(ChannelType type) {
 		this.type = type;
 	}
-	public Channel getChannel() {
-		return channel;
+	public String getChannelId() {
+		return channelId;
 	}
-	public void setChannel(Channel channel) {
-		this.channel = channel;
+	public void setChannel(String channel) {
+		this.channelId = channel;
 	}
 	public Action getAction() {
 		return action;
@@ -48,10 +48,10 @@ public class Command {
 	public void setAddress(InetSocketAddress address) {
 		this.address = address;
 	}
-	public long getPayloadSize() {
+	public int getPayloadSize() {
 		return payloadSize;
 	}
-	public void setPayloadSize(long payloadSize) {
+	public void setPayloadSize(int payloadSize) {
 		this.payloadSize = payloadSize;
 	}
 
@@ -63,5 +63,32 @@ public class Command {
 		this.needsPlayback = needsPlayback;
 	}
 
+	public static Command parse(String line) {
+		
+		String[] tokens = line.split(",");
+		Command cmd = new Command();
+		
+		return null;
+	}
+
+	
+	@Override
+	public String toString() {
+		String address = "null";
+		if(getAddress() != null) {
+			String addr = getAddress().getHostName();
+			int port = getAddress().getPort();
+			address = addr+":"+port;
+		}
+		
+		String type = getType().getValue();
+		String command = getAction()+","+channelId+","+type+","+address+","+getPayloadSize()+","+isNeedsPlayback()+"\n";
+		return command;
+	}
+
+	public byte[] createCommandStr() {
+		byte[] cmdData = this.toString().getBytes();
+		return cmdData;
+	}
 	
 }

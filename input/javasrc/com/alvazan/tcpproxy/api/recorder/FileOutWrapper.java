@@ -7,7 +7,7 @@ package com.alvazan.tcpproxy.api.recorder;
  * @author dhiller
  *
  */
-public interface FileWrapper {
+public interface FileOutWrapper {
 
 	public void open();
 	

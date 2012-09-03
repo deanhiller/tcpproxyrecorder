@@ -1,6 +1,6 @@
 package com.alvazan.tcpproxy.api.recorder;
 
-public enum Direction {
+public enum RecordingDirection {
 
 	/**
 	 * This is the common case where we open a server socket and record for playback stuff coming into the server socket but for the 

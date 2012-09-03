@@ -1,4 +1,4 @@
-package com.alvazan.tcpproxy.impl;
+package com.alvazan.tcpproxy.impl.tcp;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,7 +31,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	private TCPChannel otherChannel;
 	private boolean isRecordForPlayback;
 	private PacketDemarcator demarcator;
-	private long bytesWritten = 0;
+	private int bytesWritten = 0;
 	
 	@Override
 	public void incomingData(Channel channel, ByteBuffer b) throws IOException {
@@ -52,21 +52,25 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 
 	@Override
 	public void farEndClosed(Channel channel) {
-		Command cmd = new Command(incomingChannel, ChannelType.TCP, Action.DISCONNECT, null, 0, isRecordForPlayback);
-		writer.writeCommand(incomingChannel, cmd);
+		String channelId = (String) incomingChannel.getSession().get("id");
+		Command cmd = new Command(channelId, ChannelType.TCP, Action.DISCONNECT, null, 0, isRecordForPlayback);
+		writer.writeCommand(cmd);
 	}
 
 	@Override
 	public void passMoreData(byte[] buffer) {
 		bytesWritten += buffer.length;
-		writer.addToStream(incomingChannel, buffer);
+		String channelId = (String) incomingChannel.getSession().get("id");
+		Command cmd = new Command(channelId, ChannelType.TCP, Action.WRITE, null, buffer.length, isRecordForPlayback);
+		writer.addToStream(cmd, buffer);
 	}
 
 	@Override
 	public void demarcatePacketHere() {
 		//reset byte counter here
-		Command cmd = new Command(incomingChannel, ChannelType.TCP, Action.WRITE, null, bytesWritten, isRecordForPlayback);
-		writer.writeCommand(incomingChannel, cmd);
+		String channelId = (String) incomingChannel.getSession().get("id");
+		Command cmd = new Command(channelId, ChannelType.TCP, Action.WRITE, null, bytesWritten, isRecordForPlayback);
+		writer.writeCommand(cmd);
 		bytesWritten = 0;
 	}
 	

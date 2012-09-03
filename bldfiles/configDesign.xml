@@ -14,5 +14,4 @@
 <!-- Allow these libraries to be used by everyone like the jdk is... -->
 <package name="injection" package="javax.inject" needdeclarations="false"/>
 
-
 </design>

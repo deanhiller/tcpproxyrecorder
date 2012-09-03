@@ -19,9 +19,4 @@ public class FileNotFound extends RuntimeException {
 		super(message, cause);
 	}
 
-	public FileNotFound(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
-
 }

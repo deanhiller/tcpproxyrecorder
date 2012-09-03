@@ -2,10 +2,10 @@ package com.alvazan.tcpproxy.test;
 
 import java.io.File;
 
-import com.alvazan.tcpproxy.api.recorder.FileWrapper;
-import com.alvazan.tcpproxy.api.recorder.TCPProxy;
+import com.alvazan.tcpproxy.api.recorder.FileOutWrapper;
+import com.alvazan.tcpproxy.api.recorder.ProxyCreator;
 
-public class IntegTestBasic extends TestBasic {
+public class IntegTestBasicRecord extends TestBasicRecord {
 
 	@Override
 	protected void assertMocksStep3() {
@@ -20,7 +20,7 @@ public class IntegTestBasic extends TestBasic {
 	}
 
 	@Override
-	protected FileWrapper createCommandsWrapper(TCPProxy proxy) {
+	protected FileOutWrapper createCommandsWrapper(ProxyCreator proxy) {
 		File f = new File("output");
 		if(!f.exists())
 			f.mkdir();
@@ -28,7 +28,7 @@ public class IntegTestBasic extends TestBasic {
 	}
 	
 	@Override
-	protected FileWrapper createStreamWrapper(TCPProxy proxy) {
+	protected FileOutWrapper createStreamWrapper(ProxyCreator proxy) {
 		return proxy.createFile(new File("output/stream.txt"));
 	}
 
