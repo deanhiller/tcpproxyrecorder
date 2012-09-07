@@ -43,6 +43,9 @@ public class ProxyCreatorImpl implements ProxyCreator {
 				throw new IllegalArgumentException("You already created a proxy that will forward to address="+info.getAddressToForwardTo());
 		}
 		
+		if(info.getDemarcatorFactory() == null)
+			info.setDemarcatorFactory(new NullDemarcatorFactory());
+		
 		TcpProxy proxy = factory.get();
 		proxy.setInfo(info);
 		proxies.add(proxy);
@@ -84,11 +87,6 @@ public class ProxyCreatorImpl implements ProxyCreator {
 
 	public void stopAll() {
 		writer.close();
-		try {
-			chanMgr.stop();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 		
 		for(TcpProxy proxy : proxies) {
 			proxy.stop();
@@ -96,6 +94,13 @@ public class ProxyCreatorImpl implements ProxyCreator {
 		for(UdpProxy proxy : udpProxies) {
 			proxy.stop();
 		}
+		
+		try {
+			chanMgr.stop();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
 		isRunning = false;
 	}
 	

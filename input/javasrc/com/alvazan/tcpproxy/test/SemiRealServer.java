@@ -3,6 +3,8 @@ package com.alvazan.tcpproxy.test;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,9 @@ public class SemiRealServer implements ConnectionListener {
 	private ChannelService chanMgr;
 	private InetSocketAddress localListenAddress;
 	private InetSocketAddress remoteAddress;
-
+	private TCPServerChannel server;
+	private List<Channel> channels = new ArrayList<Channel>();
+	
 	public SemiRealServer(InetSocketAddress listenAddress, InetSocketAddress sendToAddress, ChannelService chanMgr) {
 		this.localListenAddress = listenAddress;
 		this.remoteAddress = sendToAddress;
@@ -40,14 +44,21 @@ public class SemiRealServer implements ConnectionListener {
 	}
 	
 	private void startImpl() throws IOException, InterruptedException {
-		TCPServerChannel server = chanMgr.createTCPServerChannel("semiRealSvr", null);
+		server = chanMgr.createTCPServerChannel("semiRealSvr", null);
 		server.bind(localListenAddress);
 		server.registerServerSocketChannel(this);
+	}
+	public void stop() {
+		server.close();
+		for(Channel c : channels) {
+			c.close();
+		}
 	}
 
 	@Override
 	public void connected(TCPChannel channel) throws IOException {
 		try {
+			channels.add(channel);
 			channel.registerForReads(new ServerListener());
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
@@ -93,7 +104,7 @@ public class SemiRealServer implements ConnectionListener {
 	}
 	private void runCommandImpl(Channel channel, String cmd) throws IOException, InterruptedException {
 		StateHolder state = (StateHolder) channel.getSession().get("data");
-		if("connect".equals(cmd)) {
+		if(cmd.contains("connect")) {
 			TCPChannel remoteChannel = chanMgr.createTCPChannel("svrToSvr", null);
 			remoteChannel.connect(remoteAddress);
 			remoteChannel.registerForReads(new ClientListener());
@@ -101,19 +112,19 @@ public class SemiRealServer implements ConnectionListener {
 			
 			StateHolder remoteState = findOrCreateState(remoteChannel);
 			remoteState.setRemoteChannel(channel);
-		} else if("testsplit".equals(cmd)) {
+		} else if(cmd.contains("testsplit")) {
 			Channel clientChannel = state.getRemoteChannel();
 			
 			//let's write to both WITHOUT putting the demarcation in just yet!!!
-			String s = "hiToClient";
+			String s = "|hiToClient33";
 			clientChannel.write(createBuffer(s));
-			String s2 = "hiToServer";
+			String s2 = "|hiToServer44";
 			channel.write(createBuffer(s2));
 			
 			Thread.sleep(500);
 			
-			clientChannel.write(createBuffer("clientLast"+DELIMITER1));
-			channel.write(createBuffer("serverLast"+DELIMITER2));
+			clientChannel.write(createBuffer("|clientLast5"+DELIMITER1));
+			channel.write(createBuffer("|serverLast6"+DELIMITER2));
 		}
 	}
 	
@@ -166,4 +177,6 @@ public class SemiRealServer implements ConnectionListener {
 			log.warn(channel+"failure", e);
 		}
 	}
+
+
 }

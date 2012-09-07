@@ -41,6 +41,7 @@ public class FileWriteAggregation implements FileWriter {
 			for(byte[] data : list) {
 				stream.write(data);
 			}
+			list.clear();
 		}
 	}
 

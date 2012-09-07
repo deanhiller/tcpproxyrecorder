@@ -7,6 +7,7 @@ import javax.inject.Provider;
 
 import biz.xsoftware.api.nio.ChannelManager;
 import biz.xsoftware.api.nio.Settings;
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 
 import com.alvazan.tcpproxy.api.recorder.ProxyInfo;
@@ -17,7 +18,7 @@ public class TcpProxy {
 	@Inject
 	private ChannelManager chanMgr;
 	@Inject
-	private Provider<ServerSockListener> factory;
+	private ServerSockListener listener;
 	private TCPServerChannel channel;
 	private ProxyInfo info;
 
@@ -31,7 +32,6 @@ public class TcpProxy {
 			String name = parse(addr);
 			
 			channel = chanMgr.createTCPServerChannel(name, settings );
-			ServerSockListener listener = factory.get();
 			listener.setInfo(info);
 			channel.bind(info.getIncomingAddress());
 			channel.registerServerSocketChannel(listener);
@@ -48,6 +48,10 @@ public class TcpProxy {
 
 	public void stop() {
 		channel.close();
+		
+		for(Channel c : listener.getChannels()) {
+			c.close();
+		}
 	}
 
 	public void setInfo(ProxyInfo info) {

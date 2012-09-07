@@ -8,7 +8,11 @@ import com.alvazan.tcpproxy.api.recorder.ProxyCreator;
 public class IntegTestBasicRecord extends TestBasicRecord {
 
 	@Override
-	protected void assertMocksStep3() {
+	protected void assertMocksStep3a() {
+	}
+
+	@Override
+	protected void assertMocksStep3b() {
 	}
 
 	@Override

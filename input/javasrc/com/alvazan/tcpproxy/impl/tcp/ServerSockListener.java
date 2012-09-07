@@ -2,6 +2,8 @@ package com.alvazan.tcpproxy.impl.tcp;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -10,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import biz.xsoftware.api.nio.ChannelManager;
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
@@ -35,9 +38,11 @@ public class ServerSockListener implements ConnectionListener {
 	private Provider<SocketDataListener> factory;
 	
 	private ProxyInfo info;
+	private List<Channel> channels = new ArrayList<Channel>();
 
 	@Override
 	public void connected(TCPChannel channel) throws IOException {
+		channels.add(channel);
 		channel.toString();
 		boolean isRecordAndPlayback = true;
 		if(info.getDirection() == RecordingDirection.FROM_SERVERSOCKET)
@@ -57,6 +62,7 @@ public class ServerSockListener implements ConnectionListener {
 		//We need to make this channel have same info as channel that came into us....
 		Object id = channel.getSession().get(ID);
 		TCPChannel proxyChannel = chanMgr.createTCPChannel("{id:"+channel+"}", null );
+		channels.add(proxyChannel);
 		proxyChannel.getSession().put(ID, id);
 		proxyChannel.connect(info.getAddressToForwardTo());
 		
@@ -86,6 +92,10 @@ public class ServerSockListener implements ConnectionListener {
 
 	public void setInfo(ProxyInfo info) {
 		this.info = info;
+	}
+
+	public List<Channel> getChannels() {
+		return channels;
 	}
 
 }
