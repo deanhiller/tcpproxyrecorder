@@ -58,7 +58,7 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 	}
 
 	@Override
-	public void passMoreData(byte[] buffer) {
+	public void passPartialBytes(byte[] buffer) {
 		bytesWritten += buffer.length;
 		String channelId = (String) incomingChannel.getSession().get("id");
 		Command cmd = new Command(channelId, ChannelType.TCP, Action.WRITE, null, buffer.length, isRecordForPlayback);

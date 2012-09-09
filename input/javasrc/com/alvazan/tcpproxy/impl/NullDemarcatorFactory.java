@@ -20,7 +20,7 @@ public class NullDemarcatorFactory implements DemarcatorFactory {
 
 		@Override
 		public void feedMoreData(byte[] buffer) {
-			listener.passMoreData(buffer);
+			listener.passPartialBytes(buffer);
 			listener.demarcatePacketHere();
 		}
 	}

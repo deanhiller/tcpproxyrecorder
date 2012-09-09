@@ -1,6 +1,8 @@
 package com.alvazan.tcpproxy.impl.file;
 
 import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
 
 public class Command {
 
@@ -10,6 +12,8 @@ public class Command {
 	private int payloadSize;
 	private boolean needsPlayback;
 	private ChannelType type;
+	
+	private byte[] payload;
 	
 	public Command() {}
 	
@@ -64,11 +68,24 @@ public class Command {
 	}
 
 	public static Command parse(String line) {
-		
 		String[] tokens = line.split(",");
 		Command cmd = new Command();
-		
-		return null;
+		Action action = Action.valueOf(tokens[0]);
+		cmd.setAction(action);
+		cmd.setChannel(tokens[1]);
+		ChannelType type = ChannelType.translate(tokens[2]);
+		cmd.setType(type);
+		if(!"null".equals(tokens[3])) {
+			String[] hostPort = tokens[3].split(":");
+			int port = Integer.parseInt(hostPort[1]);
+			InetSocketAddress addr = new InetSocketAddress(hostPort[0], port);
+			cmd.setAddress(addr);
+		}
+		int payloadSize = Integer.parseInt(tokens[4]);
+		cmd.setPayloadSize(payloadSize);
+		boolean isNeedPlayback = Boolean.parseBoolean(tokens[5]);
+		cmd.setNeedsPlayback(isNeedPlayback);
+		return cmd;
 	}
 
 	
@@ -89,6 +106,40 @@ public class Command {
 	public byte[] createCommandStr() {
 		byte[] cmdData = this.toString().getBytes();
 		return cmdData;
+	}
+
+	public void setPayload(byte[] data) {
+		this.payload = data;
+	}
+
+	public byte[] getPayload() {
+		return payload;
+	}
+
+	public void validate(List<Command> cmds, Map<String, List<Command>> expected, List<Command> actual) {
+		Command cmd = cmds.remove(0);
+		if(getPayloadSize() != cmd.getPayloadSize()
+		    || getAction() != cmd.getAction()
+		    || getType() != cmd.getType())
+			throw new IllegalStateException("Non matching commands="+this+" that="+cmd+" expected="+expected+" actual="+actual);
+		else if(getAddress() != null && cmd.getAddress() != null) {
+			if(getAddress().getPort() != cmd.getAddress().getPort())
+				throw new IllegalStateException("Non matching commands="+this+" that="+cmd+" expected="+expected+" actual="+actual);
+		} else if(getAddress() == null && cmd.getAddress() != null
+				|| (getAddress() != null && cmd.getAddress() == null))
+			throw new IllegalStateException("Non matching commands="+this+" that="+cmd+" expected="+expected+" actual="+actual);
+	}
+
+	public Command copy() {
+		Command c = new Command();
+		c.setAction(getAction());
+		c.setAddress(getAddress());
+		c.setChannel(getChannelId());
+		c.setNeedsPlayback(isNeedsPlayback());
+		c.setPayload(getPayload());
+		c.setPayloadSize(getPayloadSize());
+		c.setType(getType());
+		return c;
 	}
 	
 }

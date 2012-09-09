@@ -1,11 +1,18 @@
 package com.alvazan.tcpproxy.test;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.alvazan.tcpproxy.api.recorder.FileOutWrapper;
 import com.alvazan.tcpproxy.api.recorder.ProxyCreator;
 
 public class IntegTestBasicRecord extends TestBasicRecord {
+
+	
+	@Override
+	public void testBasic() throws IOException, InterruptedException {
+		super.testBasic();
+	}
 
 	@Override
 	protected void assertMocksStep3a() {

@@ -25,12 +25,12 @@ public class DelimiterPacketDemarcator implements PacketDemarcator {
 		int expectedIndex = strLength - delimiterSize;
 		int index = s.indexOf(delimiter);
 		if(index < 0) {
-			listener.passMoreData(bytes);
+			listener.passPartialBytes(bytes);
 			return;
 		} else if(index != expectedIndex)
 			throw new RuntimeException("The delimeter is not the last character in the payload so we need to split the payload and feed it to the listener twice.  payload='"+s+"'");
 		
-		listener.passMoreData(bytes);
+		listener.passPartialBytes(bytes);
 		listener.demarcatePacketHere();		
 	}
 

@@ -3,7 +3,6 @@ package com.alvazan.tcpproxy.impl.tcp;
 import java.net.InetSocketAddress;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import biz.xsoftware.api.nio.ChannelManager;
 import biz.xsoftware.api.nio.Settings;
