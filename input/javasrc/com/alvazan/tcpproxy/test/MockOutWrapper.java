@@ -58,4 +58,13 @@ public class MockOutWrapper implements FileOutWrapper {
 										   "WRITE,[p][localhost:7776][session 0] ,tcp,null,13,false\n"));		
 	}
 
+	public void assertCloseCommands() {
+		Assert.assertTrue(written.endsWith("DISCONNECT,[p][localhost:4445][session 0] ,tcp,null,0,true\n"+
+											"DISCONNECT,[p][localhost:7776][session 0] ,tcp,null,0,false\n"));
+	}
+
+	public void assertClose2Recorded() {
+		Assert.assertTrue(written.endsWith(""));
+	}
+
 }

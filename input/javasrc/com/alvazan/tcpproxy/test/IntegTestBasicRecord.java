@@ -15,6 +15,10 @@ public class IntegTestBasicRecord extends TestBasicRecord {
 	}
 
 	@Override
+	protected void assertCloses() {
+	}
+	
+	@Override
 	protected void assertMocksStep3a() {
 	}
 

@@ -28,7 +28,9 @@ public class TestBasicPlayback {
 				"WRITE,[p][localhost:7776][session 0] ,tcp,null,12,true\n" +
 				"WRITE,[p][localhost:4445][session 0] ,tcp,null,28,false\n" +
 				"WRITE,[p][localhost:7776][session 0] ,tcp,null,26,false\n" +
-				"DISCONNECT,[p][localhost:4445][session 0] ,tcp,null,0,true\n";
+				"DISCONNECT,[p][localhost:4445][session 0] ,tcp,null,0,true\n"+
+				"DISCONNECT,[p][localhost:7776][session 0] ,tcp,null,0,false\n";
+		
 		
 		//stream is taken from IntegTestBasicRecord 
 		String streamContents = "|connect111abc|testsplit2d|hiToClient33|clientLast5abc|hiToServer44|serverLast6d";

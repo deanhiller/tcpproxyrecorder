@@ -55,6 +55,8 @@ public class SocketDataListener implements DataListener, PacketReadListener {
 		String channelId = (String) incomingChannel.getSession().get("id");
 		Command cmd = new Command(channelId, ChannelType.TCP, Action.DISCONNECT, null, 0, isRecordForPlayback);
 		writer.writeCommand(cmd);
+		
+		otherChannel.close();
 	}
 
 	@Override

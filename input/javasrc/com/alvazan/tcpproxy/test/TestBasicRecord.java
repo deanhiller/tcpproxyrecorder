@@ -146,6 +146,8 @@ public class TestBasicRecord {
 		assertMocksStep2(cmd);
 		
 		TCPChannel bottomChannel = mockListener.getBottomServerChannel();
+		bottomChannel.registerForReads(new Empty());
+		
 		String cmd2 = "|testsplit2"+SemiRealServer.DELIMITER2;
 		bottomChannel.write(createBuffer(cmd2));
 		
@@ -154,6 +156,13 @@ public class TestBasicRecord {
 		assertMocksStep3a();
 		
 		client.close();
+		
+		Thread.sleep(500);
+		
+		assertCloses();
+	}
+	protected void assertCloses() {
+		cmds.assertCloseCommands();
 	}
 
 	protected void assertMocksStep3b() {
